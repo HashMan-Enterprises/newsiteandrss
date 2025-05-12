@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crypto News & Trading Data</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        header {
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            padding: 1rem 0;
+        }
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            padding: 1rem;
+            gap: 1rem;
+        }
+        .news-feed, .trading-view {
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 1rem;
+            width: 100%;
+        }
+        .news-feed {
+            flex: 2;
+        }
+        .trading-view {
+            flex: 1;
+        }
+        .news-feed h2, .trading-view h2 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: #333;
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+        li {
+            margin-bottom: 1rem;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 0.5rem;
+        }
+        a {
+            text-decoration: none;
+            color: #007BFF;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        iframe {
+            border: none;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Crypto News & Trading Dashboard</h1>
+    </header>
+    <div class="container">
+        <!-- News Feed Section -->
+        <div class="news-feed">
+            <h2>Latest News from Bitcoin Magazine</h2>
+            <ul id="rss-feed">
+                <!-- Dynamic RSS feed items will be inserted here -->
+            </ul>
+        </div>
+
+        <!-- TradingView Widget Section -->
+        <div class="trading-view">
+            <h2>Bitcoin Price Chart</h2>
+            <!-- TradingView Widget -->
+            <div class="tradingview-widget-container">
+                <div id="tradingview_chart"></div>
+                <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
+                <script type="text/javascript">
+                    new TradingView.widget({
+                        "width": "100%",
+                        "height": 400,
+                        "symbol": "BTCUSD",
+                        "interval": "D",
+                        "theme": "light",
+                        "style": "1",
+                        "locale": "en",
+                        "toolbar_bg": "#f1f3f6",
+                        "enable_publishing": false,
+                        "hide_top_toolbar": true,
+                        "save_image": false,
+                        "container_id": "tradingview_chart"
+                    });
+                </script>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript to Fetch and Display RSS Feed -->
+    <script>
+        // Fetch RSS Feed using JavaScript
+        fetch('https://digitalgoldjourney.com/import_rss_to_db.php') // Replace with your PHP script URL
+            .then(response => response.json()) // Assuming the PHP script returns JSON
+            .then(data => {
+                const feedContainer = document.getElementById('rss-feed');
+                data.forEach(item => {
+                    const listItem = document.createElement('li');
+                    listItem.innerHTML = `
+                        <a href="${item.link}" target="_blank">${item.title}</a>
+                        <p>${item.summary}</p>
+                        <small>Published on: ${new Date(item.published_date).toLocaleDateString()}</small>
+                    `;
+                    feedContainer.appendChild(listItem);
+                });
+            })
+            .catch(error => {
+                console.error('Error fetching RSS feed:', error);
+                document.getElementById('rss-feed').innerHTML = '<p>Failed to load news feed. Please try again later.</p>';
+            });
+    </script>
+</body>
+</html>
